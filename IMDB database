@@ -1,0 +1,1832 @@
+USE [master]
+GO
+/****** Object:  Database [IMDB]    Script Date: 29/06/2018 13:02:26 ******/
+CREATE DATABASE [IMDB]
+GO
+ALTER DATABASE [IMDB] SET COMPATIBILITY_LEVEL = 120
+GO
+IF (1 = FULLTEXTSERVICEPROPERTY('IsFullTextInstalled'))
+begin
+EXEC [IMDB].[dbo].[sp_fulltext_database] @action = 'enable'
+end
+GO
+ALTER DATABASE [IMDB] SET ANSI_NULL_DEFAULT OFF 
+GO
+ALTER DATABASE [IMDB] SET ANSI_NULLS OFF 
+GO
+ALTER DATABASE [IMDB] SET ANSI_PADDING OFF 
+GO
+ALTER DATABASE [IMDB] SET ANSI_WARNINGS OFF 
+GO
+ALTER DATABASE [IMDB] SET ARITHABORT OFF 
+GO
+ALTER DATABASE [IMDB] SET AUTO_SHRINK OFF 
+GO
+ALTER DATABASE [IMDB] SET AUTO_UPDATE_STATISTICS ON 
+GO
+ALTER DATABASE [IMDB] SET CURSOR_CLOSE_ON_COMMIT OFF 
+GO
+ALTER DATABASE [IMDB] SET CONCAT_NULL_YIELDS_NULL OFF 
+GO
+ALTER DATABASE [IMDB] SET NUMERIC_ROUNDABORT OFF 
+GO
+ALTER DATABASE [IMDB] SET QUOTED_IDENTIFIER OFF 
+GO
+ALTER DATABASE [IMDB] SET RECURSIVE_TRIGGERS OFF 
+GO
+ALTER DATABASE [IMDB] SET AUTO_UPDATE_STATISTICS_ASYNC OFF 
+GO
+ALTER DATABASE [IMDB] SET DATE_CORRELATION_OPTIMIZATION OFF 
+GO
+ALTER DATABASE [IMDB] SET TRUSTWORTHY OFF 
+GO
+ALTER DATABASE [IMDB] SET ALLOW_SNAPSHOT_ISOLATION OFF 
+GO
+ALTER DATABASE [IMDB] SET PARAMETERIZATION SIMPLE 
+GO
+ALTER DATABASE [IMDB] SET READ_COMMITTED_SNAPSHOT ON 
+GO
+ALTER DATABASE [IMDB] SET HONOR_BROKER_PRIORITY OFF 
+GO
+ALTER DATABASE [IMDB] SET  MULTI_USER 
+GO
+ALTER DATABASE [IMDB] SET DB_CHAINING OFF 
+GO
+ALTER DATABASE [IMDB] SET ENCRYPTION ON
+GO
+ALTER DATABASE [IMDB] SET QUERY_STORE = ON
+GO
+ALTER DATABASE [IMDB] SET QUERY_STORE (OPERATION_MODE = READ_WRITE, CLEANUP_POLICY = (STALE_QUERY_THRESHOLD_DAYS = 30), DATA_FLUSH_INTERVAL_SECONDS = 900, INTERVAL_LENGTH_MINUTES = 60, MAX_STORAGE_SIZE_MB = 100, QUERY_CAPTURE_MODE = AUTO, SIZE_BASED_CLEANUP_MODE = AUTO)
+GO
+USE [IMDB]
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET ELEVATE_ONLINE = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET ELEVATE_RESUMABLE = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET IDENTITY_CACHE = ON;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET ISOLATE_SECURITY_POLICY_CARDINALITY = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET LEGACY_CARDINALITY_ESTIMATION = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET LEGACY_CARDINALITY_ESTIMATION = PRIMARY;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET MAXDOP = 0;
+GO
+ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET MAXDOP = PRIMARY;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET OPTIMIZE_FOR_AD_HOC_WORKLOADS = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET PARAMETER_SNIFFING = ON;
+GO
+ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET PARAMETER_SNIFFING = PRIMARY;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET QUERY_OPTIMIZER_HOTFIXES = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET QUERY_OPTIMIZER_HOTFIXES = PRIMARY;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET XTP_PROCEDURE_EXECUTION_STATISTICS = OFF;
+GO
+ALTER DATABASE SCOPED CONFIGURATION SET XTP_QUERY_EXECUTION_STATISTICS = OFF;
+GO
+USE [IMDB]
+GO
+/****** Object:  Schema [ref]    Script Date: 29/06/2018 13:02:31 ******/
+CREATE SCHEMA [ref]
+GO
+/****** Object:  Table [dbo].[ActiveStatus]    Script Date: 29/06/2018 13:02:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ActiveStatus](
+	[ActiveStatusID] [int] IDENTITY(1,1) NOT NULL,
+	[ActiveStatusName] [bit] NULL,
+ CONSTRAINT [PK_ActiveStatus] PRIMARY KEY CLUSTERED 
+(
+	[ActiveStatusID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetActiveStatus]    Script Date: 29/06/2018 13:02:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create view [dbo].[GetActiveStatus] as
+SELECT [ActiveStatusID]
+      ,[ActiveStatusName]
+  FROM [dbo].[ActiveStatus]
+GO
+/****** Object:  Table [dbo].[Users]    Script Date: 29/06/2018 13:02:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Users](
+	[UserID] [int] IDENTITY(1,1) NOT NULL,
+	[UserFullName] [nvarchar](max) NULL,
+	[UserOrganization] [nvarchar](max) NULL,
+	[UserTitle] [nvarchar](max) NULL,
+	[Username] [nvarchar](max) NULL,
+	[UserMail] [nvarchar](max) NULL,
+	[UserPhone] [nvarchar](50) NULL,
+	[UserAddress] [nvarchar](max) NULL,
+	[UserActif] [bit] NULL,
+	[UserProfile] [int] NULL,
+	[UserPassword] [nvarchar](max) NULL,
+	[UserNote] [nvarchar](max) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Users] PRIMARY KEY CLUSTERED 
+(
+	[UserID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[AreaInterest]    Script Date: 29/06/2018 13:02:31 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[AreaInterest](
+	[AreaInterestID] [int] IDENTITY(1,1) NOT NULL,
+	[AreaInterestName] [nvarchar](max) NULL,
+	[AreaInterestDescription] [nvarchar](max) NULL,
+	[LastModifiedby] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Area] PRIMARY KEY CLUSTERED 
+(
+	[AreaInterestID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetAreaInterest]    Script Date: 29/06/2018 13:02:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[GetAreaInterest] as
+SELECT A.[AreaInterestID]
+      ,A.[AreaInterestName]
+      ,A.[AreaInterestDescription]
+      ,A.[LastModifiedby]
+      ,A.[LastModifiedDate]
+	  ,U.UserFullName
+  FROM [dbo].[AreaInterest] A
+ join Users U on U.UserID=A.LastModifiedby
+GO
+/****** Object:  Table [dbo].[FocalPoints]    Script Date: 29/06/2018 13:02:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[FocalPoints](
+	[FocalPointsID] [int] IDENTITY(1,1) NOT NULL,
+	[FocalPointsUser] [int] NULL,
+	[FocalPointsSector] [int] NULL,
+	[FocalPointsArea] [int] NULL,
+	[FocalPointsNotification] [bit] NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_FocalPoints] PRIMARY KEY CLUSTERED 
+(
+	[FocalPointsID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[SectorInterest]    Script Date: 29/06/2018 13:02:32 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[SectorInterest](
+	[SectorInterestID] [int] IDENTITY(1,1) NOT NULL,
+	[SectorInterestName] [nvarchar](max) NULL,
+	[SectorInterestDescription] [nvarchar](max) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_SectorInterest] PRIMARY KEY CLUSTERED 
+(
+	[SectorInterestID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetFocalPoints]    Script Date: 29/06/2018 13:02:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE view [dbo].[GetFocalPoints] as
+SELECT F.[FocalPointsID]
+      ,F.[FocalPointsUser]
+      ,F.[FocalPointsSector]
+      ,F.[FocalPointsArea]
+	  ,F.FocalPointsNotification
+      ,F.[LastModifiedBy]
+      ,F.[LastModifiedDate]
+	  ,U.UserFullName
+	  ,U.UserMail
+	  ,U.UserOrganization,
+	  U.UserPhone
+	  ,S.SectorInterestName
+	  ,A.AreaInterestName
+	  ,U1.UserFullName as LastModifiedPerson
+  FROM [dbo].[FocalPoints] F
+  join Users U on U.UserID=F.FocalPointsUser
+  join SectorInterest S on S.SectorInterestID=F.FocalPointsSector
+  join AreaInterest A on A.AreaInterestID=F.FocalPointsArea
+  join Users U1 on U1.UserID=F.LastModifiedBy
+GO
+/****** Object:  Table [dbo].[Subscriber]    Script Date: 29/06/2018 13:02:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Subscriber](
+	[SubscriberID] [int] IDENTITY(1,1) NOT NULL,
+	[SubscriberFullName] [nvarchar](max) NULL,
+	[SubscriberEmail] [nvarchar](max) NULL,
+	[SubscriberTitle] [nvarchar](max) NULL,
+	[SubscriberOrganization] [nvarchar](max) NULL,
+	[SubscriberContact] [nvarchar](max) NULL,
+	[SubscriberAddress] [nvarchar](max) NULL,
+	[SubscriberCode] [nvarchar](max) NULL,
+	[SubscriberAddedDate] [datetime] NULL,
+	[LastModifiedBy] [nvarchar](max) NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Subscriber] PRIMARY KEY CLUSTERED 
+(
+	[SubscriberID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Interest]    Script Date: 29/06/2018 13:02:33 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Interest](
+	[InterestID] [int] IDENTITY(1,1) NOT NULL,
+	[InterestSector] [int] NULL,
+	[InterestArea] [int] NULL,
+	[InterestSubscriber] [int] NULL,
+	[InterestStatus] [bit] NULL,
+	[InterestCode] [char](10) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Interest] PRIMARY KEY CLUSTERED 
+(
+	[InterestID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetInterest]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+CREATE view [dbo].[GetInterest] as
+SELECT I.[InterestID]
+      ,I.[InterestSector]
+      ,I.[InterestArea]
+      ,I.[InterestSubscriber]
+      ,I.[InterestStatus]
+      ,I.[LastModifiedBy]
+      ,I.[LastModifiedDate]
+	  ,I.InterestCode
+	  ,S.SectorInterestName
+	  ,A.AreaInterestName
+	  ,Su.SubscriberFullName
+  FROM [dbo].[Interest] I
+  join SectorInterest S on S.SectorInterestID=I.InterestSector
+  join AreaInterest A on A.AreaInterestID=I.InterestArea
+  join Subscriber Su on Su.SubscriberID=I.InterestSubscriber
+GO
+/****** Object:  Table [dbo].[Modules]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Modules](
+	[ModuleID] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleName] [nvarchar](max) NULL,
+	[ModuleDescription] [nvarchar](max) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Modules] PRIMARY KEY CLUSTERED 
+(
+	[ModuleID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetModules]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[GetModules] as 
+SELECT M.[ModuleID]
+      ,M.[ModuleName]
+      ,M.[ModuleDescription]
+      ,M.[LastModifiedBy]
+      ,M.[LastModifiedDate]
+	  ,U.UserFullName
+  FROM [dbo].[Modules] M
+  join Users U on U.UserID=M.LastModifiedBy
+GO
+/****** Object:  Table [dbo].[ModulesPage]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ModulesPage](
+	[ModulesPageID] [int] IDENTITY(1,1) NOT NULL,
+	[PageName] [nvarchar](max) NULL,
+	[PageDescription] [nvarchar](max) NULL,
+	[PageUrl] [nvarchar](max) NULL,
+	[ModuleID] [int] NULL,
+ CONSTRAINT [PK_ModulesPage] PRIMARY KEY CLUSTERED 
+(
+	[ModulesPageID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetModulesPage]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ 
+   CREATE view [dbo].[GetModulesPage] as 
+
+
+   select 
+ModulesPageID, p.ModuleID, PageName, PageDescription, PageUrl,
+  ModuleDescription, ModuleName
+from [dbo].[ModulesPage] p
+
+join GetModules m on m.ModuleID= p.ModuleID
+GO
+/****** Object:  Table [dbo].[ModuleSub]    Script Date: 29/06/2018 13:02:34 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ModuleSub](
+	[ModuleSudID] [int] IDENTITY(1,1) NOT NULL,
+	[ModuleID] [int] NULL,
+	[ModuleName] [nvarchar](max) NULL,
+	[ModuleDescription] [nvarchar](max) NULL,
+ CONSTRAINT [PK_ModuleSub] PRIMARY KEY CLUSTERED 
+(
+	[ModuleSudID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetModuleSub]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE view [dbo].[GetModuleSub] as 
+select  
+s.ModuleSudID, s.ModuleID, s.ModuleName as ModuleSubname, s.ModuleDescription,
+m.ModuleName  from 
+ModuleSub s
+join [dbo].[Modules] m on m.ModuleID= s.ModuleID
+GO
+/****** Object:  Table [dbo].[Profile]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Profile](
+	[ProfileID] [int] IDENTITY(1,1) NOT NULL,
+	[ProfileName] [nvarchar](max) NULL,
+	[ProfileDescription] [nvarchar](max) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Profile] PRIMARY KEY CLUSTERED 
+(
+	[ProfileID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetProfile]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE view [dbo].[GetProfile] as
+SELECT P.[ProfileID]
+      ,P.[ProfileName]
+      ,P.[ProfileDescription]
+      ,P.[LastModifiedBy]
+      ,P.[LastModifiedDate]
+	  ,U.UserFullName
+  FROM [dbo].[Profile] P
+  join Users U on U.UserID=P.LastModifiedBy
+GO
+/****** Object:  View [dbo].[GetSectorInterest]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE view [dbo].[GetSectorInterest] as
+SELECT S.[SectorInterestID]
+      ,S.[SectorInterestName]
+      ,S.[SectorInterestDescription]
+      ,S.[LastModifiedBy]
+      ,S.[LastModifiedDate]
+	  ,U.UserFullName as LastModifiedPerson
+  FROM [dbo].[SectorInterest] S
+  join Users U on U.UserID=S.[LastModifiedBy]
+GO
+/****** Object:  View [dbo].[GetSubscriber]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+
+
+CREATE view [dbo].[GetSubscriber] as
+SELECT S.[SubscriberID]
+      ,S.[SubscriberFullName]
+      ,S.[SubscriberEmail]
+      ,S.[SubscriberTitle]
+      ,S.[SubscriberOrganization]
+      ,S.[SubscriberContact]
+      ,S.[SubscriberAddress]
+      ,S.[LastModifiedBy]
+      ,S.[LastModifiedDate]
+	  ,S.[SubscriberCode]
+	  ,S.SubscriberAddedDate
+	  ,I.InterestID
+         ,I.InterestStatus
+         ,I.InterestSector
+         ,I.InterestArea
+         ,I.InterestSubscriber
+         ,A.AreaInterestName
+         ,Si.SectorInterestName
+  FROM [dbo].[Subscriber] S
+  join Interest I on I.InterestSubscriber= S.SubscriberID
+  left join AreaInterest A on A.AreaInterestID=I.InterestArea
+  left join SectorInterest Si ON Si.SectorInterestID=I.InterestSector
+GO
+/****** Object:  View [dbo].[GetUserProfile]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE VIEW [dbo].[GetUserProfile] AS
+SELECT [ProfileID]
+      ,[Profilename]
+  FROM [dbo].[Profile]
+GO
+/****** Object:  View [dbo].[GetUsers]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE view [dbo].[GetUsers] as
+SELECT U.[UserID]
+      ,U.[UserFullName]
+      ,U.[UserOrganization]
+      ,U.[UserTitle]
+      ,U.[Username]
+      ,U.[UserMail]
+      ,U.[UserPhone]
+      ,U.[UserAddress]
+      ,U.[UserActif]
+	  ,U.UserProfile
+      ,U.[UserPassword]
+      ,U.[UserNote]
+      ,U.[LastModifiedBy]
+      ,U.[LastModifiedDate]
+	  ,P.ProfileName
+	  ,U1.UserFullName as LastModifiedPerson
+  FROM [dbo].[Users] U
+  join GetProfile P on P.ProfileID=U.UserProfile
+  join Users U1 on U1.UserID=U.LastModifiedBy
+GO
+/****** Object:  Table [dbo].[ModulePageAccess]    Script Date: 29/06/2018 13:02:35 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ModulePageAccess](
+	[ModulePageAccessID] [int] IDENTITY(1,1) NOT NULL,
+	[PageID] [int] NULL,
+	[ProfileID] [int] NULL,
+	[Access] [bit] NULL,
+	[Doneby] [int] NULL,
+	[DoneDate] [datetime] NULL,
+ CONSTRAINT [PK_ModulePageAccess] PRIMARY KEY CLUSTERED 
+(
+	[ModulePageAccessID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+/****** Object:  View [dbo].[GetModulePageAccess]    Script Date: 29/06/2018 13:02:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+ 
+
+
+CREATE view [dbo].[GetModulePageAccess] as 
+
+select 
+ModulePageAccessID, PageID, Ac.ProfileID, Access,  
+Doneby, DoneDate, ModuleName,moduleID,
+ModulesPageID,  PageName, PageDescription, PageUrl ,[ProfileName] 
+ 
+from [dbo].[ModulePageAccess] Ac
+
+join  GetModulesPage  Mo on Mo.ModulesPageID=PageID
+join [dbo].[GetProfile] p on p.ProfileID = Ac.ProfileID
+GO
+/****** Object:  Table [dbo].[ModuleMenu]    Script Date: 29/06/2018 13:02:36 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[ModuleMenu](
+	[ModuleMenuID] [int] IDENTITY(1,1) NOT NULL,
+	[MenuName] [nvarchar](max) NULL,
+	[MenuDesc] [nvarchar](max) NULL,
+	[MenuOrder] [int] NULL,
+ CONSTRAINT [PK_ModuleMenu] PRIMARY KEY CLUSTERED 
+(
+	[ModuleMenuID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[Organization]    Script Date: 29/06/2018 13:02:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[Organization](
+	[OrganizationID] [int] IDENTITY(1,1) NOT NULL,
+	[OrganizationName] [nvarchar](max) NULL,
+	[OrganizationType] [int] NULL,
+	[OrganizationDescription] [nvarchar](max) NULL,
+	[LastModifiedBy] [int] NULL,
+	[LastModifiedDate] [datetime] NULL,
+ CONSTRAINT [PK_Organization] PRIMARY KEY CLUSTERED 
+(
+	[OrganizationID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+/****** Object:  Table [dbo].[UserProfile]    Script Date: 29/06/2018 13:02:37 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+CREATE TABLE [dbo].[UserProfile](
+	[UserProfileID] [int] IDENTITY(1,1) NOT NULL,
+	[UserProfileUserID] [int] NULL,
+	[UserProfileProfileID] [int] NULL,
+ CONSTRAINT [PK_UserProfile] PRIMARY KEY CLUSTERED 
+(
+	[UserProfileID] ASC
+)WITH (PAD_INDEX = OFF, STATISTICS_NORECOMPUTE = OFF, IGNORE_DUP_KEY = OFF, ALLOW_ROW_LOCKS = ON, ALLOW_PAGE_LOCKS = ON) ON [PRIMARY]
+) ON [PRIMARY]
+GO
+SET IDENTITY_INSERT [dbo].[ActiveStatus] ON 
+
+INSERT [dbo].[ActiveStatus] ([ActiveStatusID], [ActiveStatusName]) VALUES (1, 1)
+INSERT [dbo].[ActiveStatus] ([ActiveStatusID], [ActiveStatusName]) VALUES (2, 0)
+SET IDENTITY_INSERT [dbo].[ActiveStatus] OFF
+SET IDENTITY_INSERT [dbo].[AreaInterest] ON 
+
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (1, N'National Level (Lebanon)', N'', 1, CAST(N'2018-04-27T13:45:01.407' AS DateTime))
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (2, N'Tripoli (Field)', N'', 1, CAST(N'2018-04-27T13:45:22.860' AS DateTime))
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (3, N'South (Field)', N'', 1, CAST(N'2018-04-27T13:45:28.897' AS DateTime))
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (4, N'Beirut/Mount Lebanon (Field)', N'', 1, CAST(N'2018-04-27T13:45:37.553' AS DateTime))
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (5, N'Bekaa (Field)', N'', 1, CAST(N'2018-04-30T08:55:58.150' AS DateTime))
+INSERT [dbo].[AreaInterest] ([AreaInterestID], [AreaInterestName], [AreaInterestDescription], [LastModifiedby], [LastModifiedDate]) VALUES (6, N'Akkar (Field)', NULL, NULL, NULL)
+SET IDENTITY_INSERT [dbo].[AreaInterest] OFF
+SET IDENTITY_INSERT [dbo].[FocalPoints] ON 
+
+INSERT [dbo].[FocalPoints] ([FocalPointsID], [FocalPointsUser], [FocalPointsSector], [FocalPointsArea], [FocalPointsNotification], [LastModifiedBy], [LastModifiedDate]) VALUES (1, 2, 14, 1, 0, 1, CAST(N'2018-06-19T07:41:13.947' AS DateTime))
+GO
+INSERT [dbo].[FocalPoints] ([FocalPointsID], [FocalPointsUser], [FocalPointsSector], [FocalPointsArea], [FocalPointsNotification], [LastModifiedBy], [LastModifiedDate]) VALUES (100, 9, 10, 1, 0, 1, CAST(N'2018-06-19T09:17:16.637' AS DateTime))
+SET IDENTITY_INSERT [dbo].[FocalPoints] OFF
+SET IDENTITY_INSERT [dbo].[Interest] ON 
+
+INSERT [dbo].[Interest] ([InterestID], [InterestSector], [InterestArea], [InterestSubscriber], [InterestStatus], [InterestCode], [LastModifiedBy], [LastModifiedDate]) VALUES (1, 1, 1, 1, 1, N'          ', 1, CAST(N'2018-06-27T00:00:00.000' AS DateTime))
+GO
+
+SET IDENTITY_INSERT [dbo].[Interest] OFF
+SET IDENTITY_INSERT [dbo].[ModulePageAccess] ON 
+
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1, 1, 1, 1, 1, CAST(N'2018-06-26T17:58:39.340' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (2, 2, 1, 1, 1, CAST(N'2018-06-26T17:58:39.527' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (3, 3, 1, 1, 1, NULL)
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (4, 4, 1, 1, 1, CAST(N'2018-06-26T17:58:39.713' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (5, 5, 1, 1, 1, CAST(N'2018-06-26T17:58:39.873' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (6, 6, 1, 1, 1, CAST(N'2018-06-26T17:58:40.040' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (7, 7, 1, 1, 1, CAST(N'2018-06-26T17:58:40.210' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (8, 8, 1, 1, 1, CAST(N'2018-06-26T17:58:40.683' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (9, 9, 1, 1, 1, CAST(N'2018-06-26T17:58:40.847' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (10, 10, 1, 1, 1, CAST(N'2018-06-26T17:58:41.040' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1010, 1, 0, 0, 1, CAST(N'2018-04-19T19:03:15.570' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1011, 2, 0, 0, 1, CAST(N'2018-04-19T19:03:15.573' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1012, 4, 0, 0, 1, CAST(N'2018-04-19T19:03:15.577' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1013, 5, 0, 0, 1, CAST(N'2018-04-19T19:03:15.580' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1014, 6, 0, 0, 1, CAST(N'2018-04-19T19:03:15.580' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1015, 7, 0, 0, 1, CAST(N'2018-04-19T19:03:15.583' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1016, 8, 0, 0, 1, CAST(N'2018-04-19T19:03:15.583' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1017, 9, 0, 0, 1, CAST(N'2018-04-19T19:03:15.587' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1018, 15, 1, 1, 1, CAST(N'2018-04-27T15:49:52.130' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1019, 1, 0, 1, 1, CAST(N'2018-04-22T18:35:54.097' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1020, 2, 0, 1, 1, CAST(N'2018-04-22T18:35:54.107' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1021, 4, 0, 1, 1, CAST(N'2018-04-22T18:35:54.117' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1022, 5, 0, 1, 1, CAST(N'2018-04-22T18:35:54.127' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1023, 6, 0, 1, 1, CAST(N'2018-04-22T18:35:54.137' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1024, 7, 0, 1, 1, CAST(N'2018-04-22T18:35:54.160' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1025, 8, 0, 1, 1, CAST(N'2018-04-22T18:35:54.170' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1026, 9, 0, 1, 1, CAST(N'2018-04-22T18:35:54.180' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1027, 1, 0, 1, 1, CAST(N'2018-04-22T18:35:56.453' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1028, 2, 0, 1, 1, CAST(N'2018-04-22T18:35:56.467' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1029, 4, 0, 1, 1, CAST(N'2018-04-22T18:35:56.477' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1030, 5, 0, 1, 1, CAST(N'2018-04-22T18:35:56.487' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1031, 6, 0, 1, 1, CAST(N'2018-04-22T18:35:56.503' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1032, 7, 0, 1, 1, CAST(N'2018-04-22T18:35:56.513' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1033, 8, 0, 1, 1, CAST(N'2018-04-22T18:35:56.523' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1034, 9, 0, 1, 1, CAST(N'2018-04-22T18:35:56.533' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1035, 1, 0, 0, 1, CAST(N'2018-04-23T09:49:59.693' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1036, 2, 0, 0, 1, CAST(N'2018-04-23T09:49:59.697' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1037, 4, 0, 0, 1, CAST(N'2018-04-23T09:49:59.700' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1038, 5, 0, 0, 1, CAST(N'2018-04-23T09:49:59.700' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1039, 6, 0, 0, 1, CAST(N'2018-04-23T09:49:59.703' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1040, 7, 0, 0, 1, CAST(N'2018-04-23T09:49:59.703' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1041, 8, 0, 0, 1, CAST(N'2018-04-23T09:49:59.703' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1042, 9, 0, 0, 1, CAST(N'2018-04-23T09:49:59.707' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1043, 1, 0, 0, 1, CAST(N'2018-04-23T13:55:35.007' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1044, 2, 0, 0, 1, CAST(N'2018-04-23T13:55:35.010' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1045, 4, 0, 0, 1, CAST(N'2018-04-23T13:55:35.010' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1046, 5, 0, 0, 1, CAST(N'2018-04-23T13:55:35.013' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1047, 6, 0, 0, 1, CAST(N'2018-04-23T13:55:35.013' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1048, 7, 0, 0, 1, CAST(N'2018-04-23T13:55:35.017' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1049, 8, 0, 0, 1, CAST(N'2018-04-23T13:55:35.017' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1050, 9, 0, 0, 1, CAST(N'2018-04-23T13:55:35.020' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1051, 16, 1, 1, 1, CAST(N'2018-04-24T09:32:40.447' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1052, 17, 1, 1, 1, CAST(N'2018-04-24T09:53:51.033' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1053, 18, 1, 1, 1, CAST(N'2018-04-25T09:52:58.250' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1054, 16, 2, 1, 1, CAST(N'2018-06-26T18:03:23.070' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1055, 15, 2, 1, 1, CAST(N'2018-06-26T18:03:23.223' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1056, 17, 2, 1, 1, CAST(N'2018-06-26T18:03:23.380' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1057, 4, 2, 0, 6, CAST(N'2018-05-03T09:28:20.527' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1058, 5, 2, 0, 6, CAST(N'2018-05-03T09:28:20.527' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1059, 6, 2, 0, 6, CAST(N'2018-05-03T09:28:20.530' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1060, 7, 2, 0, 6, CAST(N'2018-05-03T09:28:20.530' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1061, 8, 2, 0, 6, CAST(N'2018-05-03T09:28:20.530' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1062, 9, 2, 0, 6, CAST(N'2018-05-03T09:28:20.533' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1063, 10, 2, 0, 6, CAST(N'2018-05-03T09:28:20.533' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1064, 18, 2, 1, 6, CAST(N'2018-05-03T09:28:20.533' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1065, 4, 3, 0, 1, CAST(N'2018-05-02T14:45:46.433' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1066, 5, 3, 0, 1, CAST(N'2018-05-02T14:45:46.447' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1067, 6, 3, 0, 1, CAST(N'2018-05-02T14:45:46.460' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1068, 7, 3, 0, 1, CAST(N'2018-05-02T14:45:46.473' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1069, 8, 3, 0, 1, CAST(N'2018-05-02T14:45:46.483' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1070, 9, 3, 0, 1, CAST(N'2018-05-02T14:45:46.493' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1071, 10, 3, 0, 1, CAST(N'2018-05-02T14:45:46.503' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1072, 18, 3, 1, 1, CAST(N'2018-05-02T14:45:46.513' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1073, 15, 3, 0, 1, CAST(N'2018-05-02T15:22:39.553' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1074, 16, 3, 1, 1, CAST(N'2018-05-02T15:22:39.570' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1075, 17, 3, 0, 1, CAST(N'2018-05-02T15:22:39.587' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1076, 2, 2, 1, 1, CAST(N'2018-06-26T18:03:23.547' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1077, 1, 3, 0, 1, CAST(N'2018-05-02T15:26:08.807' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1078, 1, 2, 1, 6, CAST(N'2018-05-03T09:28:20.523' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1079, 19, 1, 1, 1, CAST(N'2018-06-26T17:58:38.883' AS DateTime))
+INSERT [dbo].[ModulePageAccess] ([ModulePageAccessID], [PageID], [ProfileID], [Access], [Doneby], [DoneDate]) VALUES (1080, 19, 2, 1, 1, CAST(N'2018-06-26T18:03:22.910' AS DateTime))
+SET IDENTITY_INSERT [dbo].[ModulePageAccess] OFF
+SET IDENTITY_INSERT [dbo].[Modules] ON 
+
+INSERT [dbo].[Modules] ([ModuleID], [ModuleName], [ModuleDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (1, N'Users', N'Users Module', 1, CAST(N'2018-04-26T17:13:45.677' AS DateTime))
+INSERT [dbo].[Modules] ([ModuleID], [ModuleName], [ModuleDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (4, N'Settings', N'Settings module', 1, CAST(N'2018-04-26T17:13:32.690' AS DateTime))
+INSERT [dbo].[Modules] ([ModuleID], [ModuleName], [ModuleDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (14, N'Administration', N'Administration of the application', 1, CAST(N'2018-04-26T17:13:03.330' AS DateTime))
+INSERT [dbo].[Modules] ([ModuleID], [ModuleName], [ModuleDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (1020, N'Contact List', N'Contact List module', 1, CAST(N'2018-04-26T17:13:16.263' AS DateTime))
+SET IDENTITY_INSERT [dbo].[Modules] OFF
+SET IDENTITY_INSERT [dbo].[ModulesPage] ON 
+
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (1, N'AddUsers', N'Management of the Users', N'Users Page', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (2, N'Sectors', N'Manage of the sectors', N'Sectors Page', 1020)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (3, N'Field', N'Manage of the the field', N'Fields page', 5)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (4, N'SystemMod', N'System Module', N'System Module', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (5, N'SystemModList', N'SystemModList', N'SystemModList', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (6, N'Administration', N'', N'', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (7, N'SystemPageAccess', N'SystemPageAccess', N'SystemPageAccess', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (8, N'SystemPage', N'SystemPage', N'SystemPage', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (9, N'SystemPageList', N'SystemPageList', N'SystemPageList', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (10, N'Profiles', N'Profile of the application', N'Profiles', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (11, N'Areas', N'Arest tes', N'Areas', 0)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (12, N'Areasfdsfds', N'dsfasf', N'fdsf', 0)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (15, N'Areas', N'', N'Area of Interest', 1020)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (16, N'ContactList', N'', N'Contact List', 1020)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (17, N'FocalPoint', N'Focal Point Module', N'Focal Point', 1020)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (18, N'EditProfile', N'Edit your own profile as user', N'', 14)
+INSERT [dbo].[ModulesPage] ([ModulesPageID], [PageName], [PageDescription], [PageUrl], [ModuleID]) VALUES (19, N'Unsubscription', N'Unsubscription', N'Unsubscription', 1020)
+SET IDENTITY_INSERT [dbo].[ModulesPage] OFF
+SET IDENTITY_INSERT [dbo].[Profile] ON 
+
+INSERT [dbo].[Profile] ([ProfileID], [ProfileName], [ProfileDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (1, N'Administrator', NULL, 1, NULL)
+INSERT [dbo].[Profile] ([ProfileID], [ProfileName], [ProfileDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (2, N'Contributor', NULL, 1, NULL)
+INSERT [dbo].[Profile] ([ProfileID], [ProfileName], [ProfileDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (3, N'Viewer', NULL, 1, NULL)
+SET IDENTITY_INSERT [dbo].[Profile] OFF
+SET IDENTITY_INSERT [dbo].[SectorInterest] ON 
+
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (1, N'Basic Assistance', N'Basic Assistance', 1, CAST(N'2018-05-03T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (2, N'Child Protection', N'Child Protection', 1, CAST(N'2018-05-04T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (3, N'Education', N'Education', 1, CAST(N'2018-05-05T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (4, N'Food Security', N'Food Security', 1, CAST(N'2018-05-06T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (5, N'Information Management', N'Information Management', 1, CAST(N'2018-05-07T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (6, N'Inter-agency response/ Coordination', N'Inter-agency response/ Coordination', 1, CAST(N'2018-05-08T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (7, N'Livelihood', N'Livelihood', 1, CAST(N'2018-05-09T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (8, N'Protection', N'Protection', 1, CAST(N'2018-05-10T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (9, N'Health', N'Public Health', 1, CAST(N'2018-05-11T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (10, N'SGBV', N'SGBV', 1, CAST(N'2018-05-12T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (11, N'Shelter', N'Shelter', 1, CAST(N'2018-05-13T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (12, N'Social Stability', N'Social Cohesion', 1, CAST(N'2018-05-14T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (13, N'Water', N'Water', 1, CAST(N'2018-05-15T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (14, N'Inter-Sector - Comprehensive', N'Full Inter-Sector Mailing List', 1, CAST(N'2018-06-08T09:49:08.537' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (15, N'Inter-Sector', N'', 1, CAST(N'2018-06-08T09:49:41.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (16, N'Financial Tracking System', N'Financial Tracking System list of contacts should only be shared with Rony from UNDP.', 1, CAST(N'2018-06-13T15:47:55.690' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (17, N'Energy', N'Energy', 1, CAST(N'2018-08-19T00:00:00.000' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (18, N'test', N'', 1122, CAST(N'2018-06-25T15:22:58.230' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (19, N'test', N'', 1122, CAST(N'2018-06-25T15:23:36.747' AS DateTime))
+INSERT [dbo].[SectorInterest] ([SectorInterestID], [SectorInterestName], [SectorInterestDescription], [LastModifiedBy], [LastModifiedDate]) VALUES (20, N'test', N'', 1, CAST(N'2018-06-25T18:25:10.110' AS DateTime))
+SET IDENTITY_INSERT [dbo].[SectorInterest] OFF
+SET IDENTITY_INSERT [dbo].[Subscriber] ON 
+
+INSERT [dbo].[Subscriber] ([SubscriberID], [SubscriberFullName], [SubscriberEmail], [SubscriberTitle], [SubscriberOrganization], [SubscriberContact], [SubscriberAddress], [SubscriberCode], [SubscriberAddedDate], [LastModifiedBy], [LastModifiedDate]) VALUES (1, N'Cyrille Ble', N'mario.abouzeid@gmail.com', N'General Supervisor of the Lebanon Crisis Response Plan & Advisor for the Minister for the Refugee Portfolio', N'Ministry of Social Affairs', N'9613103283', N'', N'', CAST(N'2018-06-27T00:00:00.000' AS DateTime), N'1', CAST(N'2018-06-27T00:00:00.000' AS DateTime))
+SET IDENTITY_INSERT [dbo].[Subscriber] OFF
+SET IDENTITY_INSERT [dbo].[Users] ON 
+
+INSERT [dbo].[Users] ([UserID], [UserFullName], [UserOrganization], [UserTitle], [Username], [UserMail], [UserPhone], [UserAddress], [UserActif], [UserProfile], [UserPassword], [UserNote], [LastModifiedBy], [LastModifiedDate]) VALUES (1, N'System Administrator', N'UNHCR', N'System Administrator', N'cl-admin', N'ble@unhcr.org', N'+96181200454', N'Leah Blg', 1, 1, N'imcl@dm1n', NULL, 1, CAST(N'2018-06-18T00:00:00.000' AS DateTime))
+INSERT [dbo].[Users] ([UserID], [UserFullName], [UserOrganization], [UserTitle], [Username], [UserMail], [UserPhone], [UserAddress], [UserActif], [UserProfile], [UserPassword], [UserNote], [LastModifiedBy], [LastModifiedDate]) VALUES (3, N'Cyrille Ble', N'', N'', N'ble@unhcr.org', N'ble@unhcr.org', N'', N'', 1, 1, N'jejdc5', N'', 1, CAST(N'2018-06-18T15:55:17.833' AS DateTime))
+SET IDENTITY_INSERT [dbo].[Users] OFF
+/****** Object:  StoredProcedure [dbo].[GetModulePageAccessProc]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE PROCEDURE [dbo].[GetModulePageAccessProc]
+
+
+(
+                @ProfileID int
+                 )
+
+As
+  BEGIN
+  select 
+ModulePageAccessID, ModulesPageID, ProfileID, Access, PageName, PageDescription, PageUrl, profileName, ModuleName ,moduleID
+from [getModulePageAccess]  where  ProfileID = @ProfileID   
+
+
+union select 
+ 
+
+
+0 ModulePageAccessID, ModulesPageID, 0 ProfileID, cast (0 as bit) Access, PageName, PageDescription, PageUrl, '' as profileName, ModuleName, moduleID
+
+
+from  getModulesPage  where    ModulesPageID not in (select ModulesPageID from   getModulePageAccess   where ProfileID = @ProfileID)
+
+                END
+GO
+/****** Object:  StoredProcedure [dbo].[GetModulePageAccessProcModule]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+
+CREATE  PROCEDURE [dbo].[GetModulePageAccessProcModule]
+
+
+(
+                @ProfileID int,
+                @ModuleID int
+                 )
+
+As
+  BEGIN
+  select 
+ModulePageAccessID, ModulesPageID, ProfileID, Access, PageName, PageDescription, PageUrl, profileName, ModuleName ,moduleID
+from [getModulePageAccess]  where  ProfileID =@ProfileID and ModuleID=@ModuleID
+
+
+union select 
+ 
+
+
+0 ModulePageAccessID, ModulesPageID, 0 ProfileID, cast (0 as bit) Access, PageName, PageDescription, PageUrl, '' as profileName, ModuleName, moduleID
+
+
+from  getModulesPage  where    ModulesPageID not in (select ModulesPageID from   getModulePageAccess   where ProfileID = @ProfileID    ) and ModuleID=@ModuleID
+
+
+end
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addAreaInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addAreaInterest] 
+(
+	@AreaInterestID int,
+	@AreaInterestName nvarchar(max),
+	@AreaInterestDescription nvarchar(max),
+	@LastModifiedby int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO AreaInterest
+		(
+			AreaInterestName,
+			AreaInterestDescription,
+			LastModifiedby,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@AreaInterestName,
+			@AreaInterestDescription,
+			@LastModifiedby,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addAssign]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addAssign] 
+(
+	@AssignID int,
+	@AssignProfileID int,
+	@AssignUserID int,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO Assign
+		(
+			AssignProfileID,
+			AssignUserID,
+			LastModifiedBy,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@AssignProfileID,
+			@AssignUserID,
+			@LastModifiedBy,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addFocalPoints]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addFocalPoints] 
+(
+	@FocalPointsID int,
+	@FocalPointsUser int,
+	@FocalPointsSector int,
+	@FocalPointsArea int,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime,
+	@FocalPointsNotification bit
+)
+AS
+	BEGIN
+
+		INSERT INTO FocalPoints
+		(
+			FocalPointsUser,
+			FocalPointsSector,
+			FocalPointsArea,
+			LastModifiedBy,
+			LastModifiedDate,
+			FocalPointsNotification
+		)
+		VALUES
+		(
+			@FocalPointsUser,
+			@FocalPointsSector,
+			@FocalPointsArea,
+			@LastModifiedBy,
+			@LastModifiedDate,
+			@FocalPointsNotification
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_addInterest] 
+(
+	@InterestID int,
+	@InterestSector int,
+	@InterestArea int,
+	@InterestSubscriber int,
+	@InterestStatus bit,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime,
+	@InterestCode nvarchar(10)
+)
+AS
+	BEGIN
+
+		INSERT INTO Interest
+		(
+			InterestSector,
+			InterestArea,
+			InterestSubscriber,
+			InterestStatus,
+			LastModifiedBy,
+			LastModifiedDate,
+			InterestCode
+		)
+		VALUES
+		(
+			@InterestSector,
+			@InterestArea,
+			@InterestSubscriber,
+			@InterestStatus,
+			@LastModifiedBy,
+			@LastModifiedDate,
+			@InterestCode
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addModulePageAccess]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_addModulePageAccess] 
+(
+       @ModulePageAccessID int,
+       @PageID int,
+       @ProfileID int,
+       @Access bit,
+       @Doneby int,
+       @DoneDate datetime
+)
+AS
+       BEGIN
+
+             INSERT INTO ModulePageAccess
+             (
+                    PageID,
+                    ProfileID,
+                    Access,
+                    Doneby,
+                    DoneDate
+             )
+             VALUES
+             (
+                    @PageID,
+                    @ProfileID,
+                    @Access,
+                    @Doneby,
+                    @DoneDate
+
+             )
+
+       END
+
+       SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+
+
+       SET QUOTED_IDENTIFIER ON
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addModules]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addModules] 
+(
+	@ModuleID int,
+	@ModuleName nvarchar(max),
+	@ModuleDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO Modules
+		(
+			ModuleName,
+			ModuleDescription,
+			LastModifiedBy,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@ModuleName,
+			@ModuleDescription,
+			@LastModifiedBy,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addModulesPage]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addModulesPage] 
+(
+       @ModulesPageID int,
+       @PageName NVARCHAR(MAX),
+       @PageDescription NVARCHAR(MAX),
+       @PageUrl NVARCHAR(MAX),
+       @ModuleID int
+)
+AS
+       BEGIN
+
+             INSERT INTO ModulesPage
+             (
+                    PageName,
+                    PageDescription,
+                    PageUrl,
+                    ModuleID
+             )
+             VALUES
+             (
+                    @PageName,
+                    @PageDescription,
+                    @PageUrl,
+                    @ModuleID
+
+             )
+
+       END
+
+       SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addModuleSub]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addModuleSub] 
+(
+       @ModuleSudID int,
+       @ModuleID int,
+       @ModuleName NVARCHAR(MAX),
+       @ModuleDescription NVARCHAR(MAX)
+)
+AS
+       BEGIN
+
+             INSERT INTO ModuleSub
+             (
+                    ModuleID,
+                    ModuleName,
+                    ModuleDescription
+             )
+             VALUES
+             (
+                    @ModuleID,
+                    @ModuleName,
+                    @ModuleDescription
+
+             )
+
+       END
+
+       SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addProfile]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addProfile] 
+(
+	@ProfileID int,
+	@ProfileName nvarchar(max),
+	@ProfileDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO Profile
+		(
+			ProfileName,
+			ProfileDescription,
+			LastModifiedBy,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@ProfileName,
+			@ProfileDescription,
+			@LastModifiedBy,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addSectorInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addSectorInterest] 
+(
+	@SectorInterestID int,
+	@SectorInterestName nvarchar(max),
+	@SectorInterestDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO SectorInterest
+		(
+			SectorInterestName,
+			SectorInterestDescription,
+			LastModifiedBy,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@SectorInterestName,
+			@SectorInterestDescription,
+			@LastModifiedBy,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addSubscribers]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_addSubscribers] 
+(
+	@SubscriberID int,
+	@SubscriberFullName nvarchar(max),
+	@SubscriberEmail nvarchar(max),
+	@SubscriberTitle nvarchar(max),
+	@SubscriberOrganization nvarchar(max),
+	@SubscriberContact nvarchar(max),
+	@LastModifiedBy nvarchar(max),
+	@LastModifiedDate datetime,
+	@SubscriberCode nvarchar(max),
+	@SubscriberAddedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO Subscriber
+		(
+			SubscriberFullName,
+			SubscriberEmail,
+			SubscriberTitle,
+			SubscriberOrganization,
+			SubscriberContact,
+			LastModifiedBy,
+			LastModifiedDate,
+			SubscriberCode,
+			SubscriberAddedDate
+		)
+		VALUES
+		(
+			@SubscriberFullName,
+			@SubscriberEmail,
+			@SubscriberTitle,
+			@SubscriberOrganization,
+			@SubscriberContact,
+			@LastModifiedBy,
+			@LastModifiedDate,
+			@SubscriberCode,
+			@SubscriberAddedDate
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_addUsers]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_addUsers] 
+(
+	@UserID int,
+	@UserFullName nvarchar(max),
+	@UserOrganization nvarchar(max),
+	@UserTitle nvarchar(max),
+	@Username nvarchar(max),
+	@UserMail nvarchar(max),
+	@UserPhone nvarchar(max),
+	@UserAddress nvarchar(max),
+	@UserActif bit,
+	@UserProfile int,
+	@UserPassword nvarchar(max),
+	@UserNote nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		INSERT INTO Users
+		(
+			UserFullName,
+			UserOrganization,
+			UserTitle,
+			Username,
+			UserMail,
+			UserPhone,
+			UserAddress,
+			UserActif,
+			UserProfile,
+			UserPassword,
+			UserNote,
+			LastModifiedBy,
+			LastModifiedDate
+		)
+		VALUES
+		(
+			@UserFullName,
+			@UserOrganization,
+			@UserTitle,
+			@Username,
+			@UserMail,
+			@UserPhone,
+			@UserAddress,
+			@UserActif,
+			@UserProfile,
+			@UserPassword,
+			@UserNote,
+			@LastModifiedBy,
+			@LastModifiedDate
+
+		)
+
+	END
+
+	SELECT SCOPE_IDENTITY() AS NewSavedID WHERE @@ROWCOUNT > 0
+GO
+/****** Object:  StoredProcedure [dbo].[sp_AdminupdateUsers]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_AdminupdateUsers]
+(
+	@UserID int,
+	@UserActif bit,
+	@UserProfile int,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime,
+	@UserAddress nvarchar(max)
+)
+AS
+	BEGIN
+
+		UPDATE Users SET
+			UserActif = @UserActif,
+			UserProfile=@UserProfile,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate,
+			UserAddress=@UserAddress
+
+		WHERE UserID = @UserID
+
+	END
+
+GO
+/****** Object:  StoredProcedure [dbo].[sp_focalpointupdateSubscriber]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+create PROCEDURE [dbo].[sp_focalpointupdateSubscriber]
+(
+	@SubscriberID int,
+	@SubscriberFullName nvarchar(max),
+	@SubscriberEmail nvarchar(max),
+	@SubscriberTitle nvarchar(max),
+	@SubscriberOrganization nvarchar(max),
+	@SubscriberContact nvarchar(max),
+	@LastModifiedBy nvarchar(max),
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE Subscriber SET
+			SubscriberFullName = @SubscriberFullName,
+			SubscriberEmail = @SubscriberEmail,
+			SubscriberTitle = @SubscriberTitle,
+			SubscriberOrganization = @SubscriberOrganization,
+			SubscriberContact = @SubscriberContact,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE SubscriberID = @SubscriberID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateAreaInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateAreaInterest]
+(
+	@AreaInterestID int,
+	@AreaInterestName nvarchar(max),
+	@AreaInterestDescription nvarchar(max),
+	@LastModifiedby int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE AreaInterest SET
+			AreaInterestName = @AreaInterestName,
+			AreaInterestDescription = @AreaInterestDescription,
+			LastModifiedby = @LastModifiedby,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE AreaInterestID = @AreaInterestID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateAssign]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateAssign]
+(
+	@AssignID int,
+	@AssignProfileID int,
+	@AssignUserID int,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE Assign SET
+			AssignProfileID = @AssignProfileID,
+			AssignUserID = @AssignUserID,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE AssignID = @AssignID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateFocalPoints]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateFocalPoints]
+(
+	@FocalPointsID int,
+	@FocalPointsUser int,
+	@FocalPointsSector int,
+	@FocalPointsArea int,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime,
+	@FocalPointsNotification bit
+)
+AS
+	BEGIN
+
+		UPDATE FocalPoints SET
+			FocalPointsUser = @FocalPointsUser,
+			FocalPointsSector = @FocalPointsSector,
+			FocalPointsArea = @FocalPointsArea,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate,
+			FocalPointsNotification=@FocalPointsNotification
+
+		WHERE FocalPointsID = @FocalPointsID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateInterest]
+(
+	@InterestID int,
+	@InterestSector int,
+	@InterestArea int,
+	@InterestSubscriber int,
+	@InterestStatus bit,
+	@LastModifiedBy int,
+	@LastModifiedDate datetime,
+	@InterestCode nvarchar(10)
+)
+AS
+	BEGIN
+
+		UPDATE Interest SET
+			InterestSector = @InterestSector,
+			InterestArea = @InterestArea,
+			InterestSubscriber = @InterestSubscriber,
+			InterestStatus = @InterestStatus,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate,
+			InterestCode=@InterestCode
+
+		WHERE InterestID = @InterestID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateModulePageAccess]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateModulePageAccess]
+(
+       @ModulePageAccessID int,
+       @PageID int,
+       @ProfileID int,
+       @Access bit,
+       @Doneby int,
+       @DoneDate datetime
+)
+AS
+       BEGIN
+
+             UPDATE ModulePageAccess SET
+                    PageID = @PageID,
+                    ProfileID = @ProfileID,
+                    Access = @Access,
+                    Doneby = @Doneby,
+                    DoneDate = @DoneDate
+
+             WHERE ModulePageAccessID = @ModulePageAccessID
+
+       END
+
+       
+       SET QUOTED_IDENTIFIER ON
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateModules]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateModules]
+(
+	@ModuleID int,
+	@ModuleName nvarchar(max),
+	@ModuleDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE Modules SET
+			ModuleName = @ModuleName,
+			ModuleDescription = @ModuleDescription,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE ModuleID = @ModuleID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateModulesPage]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateModulesPage]
+(
+       @ModulesPageID int,
+       @PageName NVARCHAR(MAX),
+       @PageDescription NVARCHAR(MAX),
+       @PageUrl NVARCHAR(MAX),
+       @ModuleID int
+)
+AS
+       BEGIN
+
+             UPDATE ModulesPage SET
+                    PageName = @PageName,
+                    PageDescription = @PageDescription,
+                    PageUrl = @PageUrl,
+                    ModuleID = @ModuleID
+
+             WHERE ModulesPageID = @ModulesPageID
+
+       END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateModuleSub]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateModuleSub]
+(
+       @ModuleSudID int,
+       @ModuleID int,
+       @ModuleName NVARCHAR(MAX),
+       @ModuleDescription NVARCHAR(MAX)
+)
+AS
+       BEGIN
+
+             UPDATE ModuleSub SET
+                    ModuleID = @ModuleID,
+                    ModuleName = @ModuleName,
+                    ModuleDescription = @ModuleDescription
+
+             WHERE ModuleSudID = @ModuleSudID
+
+       END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateProfile]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateProfile]
+(
+	@ProfileID int,
+	@ProfileName nvarchar(max),
+	@ProfileDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE Profile SET
+			ProfileName = @ProfileName,
+			ProfileDescription = @ProfileDescription,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE ProfileID = @ProfileID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateSectorInterest]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateSectorInterest]
+(
+	@SectorInterestID int,
+	@SectorInterestName nvarchar(max),
+	@SectorInterestDescription nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE SectorInterest SET
+			SectorInterestName = @SectorInterestName,
+			SectorInterestDescription = @SectorInterestDescription,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE SectorInterestID = @SectorInterestID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateSubscriber]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_updateSubscriber]
+(
+	@SubscriberID int,
+	@SubscriberFullName nvarchar(max),
+	@SubscriberEmail nvarchar(max),
+	@SubscriberTitle nvarchar(max),
+	@SubscriberOrganization nvarchar(max),
+	@SubscriberContact nvarchar(max),
+	@LastModifiedBy nvarchar(max),
+	@LastModifiedDate datetime,
+	@SubscriberCode nvarchar(10)
+)
+AS
+	BEGIN
+
+		UPDATE Subscriber SET
+			SubscriberFullName = @SubscriberFullName,
+			SubscriberEmail = @SubscriberEmail,
+			SubscriberTitle = @SubscriberTitle,
+			SubscriberOrganization = @SubscriberOrganization,
+			SubscriberContact = @SubscriberContact,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate,
+			SubscriberCode=@SubscriberCode
+
+		WHERE SubscriberID = @SubscriberID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_updateSubscriberconfirm]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+
+CREATE PROCEDURE [dbo].[sp_updateSubscriberconfirm]
+(
+	@SubscriberID int,
+	@SubscriberFullName nvarchar(max),
+	@SubscriberEmail nvarchar(max),
+	@SubscriberTitle nvarchar(max),
+	@SubscriberOrganization nvarchar(max),
+	@SubscriberContact nvarchar(max),
+	@LastModifiedBy nvarchar(max),
+	@LastModifiedDate datetime 
+)
+AS
+	BEGIN
+
+		UPDATE Subscriber SET
+			SubscriberFullName = @SubscriberFullName,
+			SubscriberEmail = @SubscriberEmail,
+			SubscriberTitle = @SubscriberTitle,
+			SubscriberOrganization = @SubscriberOrganization,
+			SubscriberContact = @SubscriberContact,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate 
+
+		WHERE SubscriberID = @SubscriberID
+
+	END
+GO
+/****** Object:  StoredProcedure [dbo].[sp_UserupdateUsers]    Script Date: 29/06/2018 13:02:51 ******/
+SET ANSI_NULLS ON
+GO
+SET QUOTED_IDENTIFIER ON
+GO
+
+CREATE PROCEDURE [dbo].[sp_UserupdateUsers]
+(
+	@UserID int,
+	@UserFullName nvarchar(max),
+	@UserOrganization nvarchar(max),
+	@UserTitle nvarchar(max),
+	@UserMail nvarchar(max),
+	@UserPhone nvarchar(max),
+	@UserAddress nvarchar(max),
+	@UserNote nvarchar(max),
+	@LastModifiedBy int,
+	@LastModifiedDate datetime
+)
+AS
+	BEGIN
+
+		UPDATE Users SET
+			UserFullName = @UserFullName,
+			UserOrganization = @UserOrganization,
+			UserTitle = @UserTitle,
+			UserMail = @UserMail,
+			UserPhone = @UserPhone,
+			UserAddress = @UserAddress,
+			UserNote = @UserNote,
+			LastModifiedBy = @LastModifiedBy,
+			LastModifiedDate = @LastModifiedDate
+
+		WHERE UserID = @UserID
+
+	END
+GO
+USE [master]
+GO
+ALTER DATABASE [IMDB] SET  READ_WRITE 
+GO
